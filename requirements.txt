@@ -1,0 +1,11 @@
+langchain>=0.2.10
+langchain-community>=0.2.9
+langchain-openai>=0.1.22
+openai>=1.40.0
+faiss-cpu>=1.8.0
+pypdf>=4.2.0
+tiktoken>=0.7.0
+python-dotenv>=1.0.1
+fastapi>=0.112.0
+uvicorn[standard]>=0.30.0
+streamlit>=1.36.0

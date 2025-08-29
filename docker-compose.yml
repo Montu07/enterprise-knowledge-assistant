@@ -1,0 +1,31 @@
+version: "3.9"
+services:
+  api:
+    build: .
+    container_name: eka-api
+    restart: unless-stopped
+    environment:
+      # Pass your OpenAI key into the container
+      - OPENAI_API_KEY=${OPENAI_API_KEY}
+      - EMBEDDING_MODEL=${EMBEDDING_MODEL:-text-embedding-3-small}
+      - CHAT_MODEL=${CHAT_MODEL:-gpt-4o-mini}
+    volumes:
+      # Persist your built FAISS index and allow PDFs to be read
+      - ./index:/app/index
+      - ./data:/app/data
+    ports:
+      - "8000:8000"
+    command: ["uvicorn", "app.api:app", "--host", "0.0.0.0", "--port", "8000"]
+
+  ui:
+    build: .
+    container_name: eka-ui
+    restart: unless-stopped
+    environment:
+      # 👇 Make the UI call the API over the Docker network
+      - API_URL=http://api:8000/ask
+    depends_on:
+      - api
+    ports:
+      - "8501:8501"
+    command: ["streamlit", "run", "ui/app.py", "--server.port", "8501", "--server.address", "0.0.0.0"]
